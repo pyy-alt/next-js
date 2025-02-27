@@ -1,3 +1,6 @@
-### 安装使用 npm
+<!--
+ Copyright (c) 2025 zdb
 
-### 运行使用 yarn
+ This software is released under the MIT License.
+ https://opensource.org/licenses/MIT
+-->
