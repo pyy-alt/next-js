@@ -4,7 +4,7 @@
 export default function Tickets() {
   return (
     <div>
-      <h1>Tickets</h1>
+      <h1 className="text-3xl font-bold underline">Tickets</h1>
     </div>
   );
 }

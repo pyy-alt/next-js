@@ -60,14 +60,14 @@ export default async function TicketFormPage({ searchParams }: { searchParams: P
       // return ticket form
       console.log('ticket: ', ticket);
       console.log('customer: ', customer);
-      return (
-        <>
-          <h2 className="text-2xl mb-2">Ticket Form</h2>
-          <div className="text-xl mb-2">Ticket ID: {ticket.id}</div>
-          <div className="text-xl mb-2">Ticket Completed: {ticket.completed}</div>
-          <div className="text-xl mb-2">Ticket Description: {ticket.description}</div>
-        </>
-      );
+      // return (
+        // <>
+        //   <h2 className="text-2xl mb-2">Ticket Form</h2>
+        //   <div className="text-xl mb-2">Ticket ID: {ticket.id}</div>
+        //   <div className="text-xl mb-2">Ticket Completed: {ticket.completed}</div>
+        //   <div className="text-xl mb-2">Ticket Description: {ticket.description}</div>
+        // </>
+      // );
     }
   } catch (e) {
     if (e instanceof Error) {

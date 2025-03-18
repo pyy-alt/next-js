@@ -1,7 +1,13 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
+
+// 本地字体配置
+// import localFont from 'next/font/local'
+// const myFont= localFont({
+//   src: './fonts/SanJiPoMoTi-2.ttf',
+// })
+import { Geist, Geist_Mono } from 'next/font/google';
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
@@ -26,9 +32,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    // <html lang="en" suppressHydrationWarning className={myFont.className}>
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} antialiased`} 
       >
         <ThemeProvider
           attribute="class"

@@ -18,18 +18,17 @@ export default async function CustomerFormPage({ searchParams }: { searchParams:
             <BackButton className="w-full" title="返回" variant="default"></BackButton>
           </>
         );
-      } else {
-        console.log(customer);
-        return (
-          <>
-            <div className="text-2xl mb-2">Customer Form</div>
-            <div className="text-xl mb-2">Customer Name: {customer.firstName + customer.lastName}</div>
-            <div className="text-xl mb-2">Customer Email: {customer.email}</div>
-            <div className="text-xl mb-2">Customer Phone: {customer.phone}</div>
-            <div className="text-xl mb-2">Customer Address:</div>
-          </>
-        );
       }
+        console.log(customer);
+        // return (
+        //   <>
+        //     <div className="text-2xl mb-2">Customer Form</div>
+        //     <div className="text-xl mb-2">Customer Name: {customer.firstName + customer.lastName}</div>
+        //     <div className="text-xl mb-2">Customer Email: {customer.email}</div>
+        //     <div className="text-xl mb-2">Customer Phone: {customer.phone}</div>
+        //     <div className="text-xl mb-2">Customer Address:</div>
+        //   </>
+        // );
     }
   } catch (error) {
     if (error instanceof Error) {
