@@ -20,10 +20,10 @@ export default async function CustomerFormPage({ searchParams }: { searchParams:
         );
       }
       // edit customer form
-      return  <CustomerForm customer={customer}></CustomerForm>;
+      return  <CustomerForm customer={customer}/>;
     } else {
       // create customer form
-     return <CustomerForm></CustomerForm>;
+     return <CustomerForm/>;
     }
   } catch (error) {
     if (error instanceof Error) {
