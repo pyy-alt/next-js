@@ -8,6 +8,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 //   src: './fonts/SanJiPoMoTi-2.ttf',
 // })
 import { Geist, Geist_Mono } from 'next/font/google';
+import { SplashCursor } from '@/components/ui/splash-cursor';
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
@@ -34,16 +35,10 @@ export default function RootLayout({
   return (
     // <html lang="en" suppressHydrationWarning className={myFont.className}>
     <html lang="en" suppressHydrationWarning>
-      <body
-      className={`${geistSans.variable} ${geistMono.variable} antialiased`} 
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           {children}
+          <SplashCursor />
         </ThemeProvider>
       </body>
     </html>
