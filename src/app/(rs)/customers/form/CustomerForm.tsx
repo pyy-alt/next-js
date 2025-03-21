@@ -16,11 +16,20 @@ import { InputWithLabel } from '@/components/inputs/InputWithLabel';
 import { SelectWithLabel } from '@/components/inputs/SelectwithLabel';
 import { TextareaWithLabel } from '@/components/inputs/TextAreaWithLabel';
 
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
+
 import { StatesArray as states } from '@/constants/StateArray';
+import { CheckboxwithLabel } from '@/components/inputs/CheckboxwithLabel';
 type Props = {
   customer?: selectCustomerSchemaType;
 };
 export default function CustomerForm({ customer }: Props) {
+  const { getPermissions, getPermission, isLoading } = useKindeBrowserClient();
+  const isMansger = !isLoading && getPermission('manager')?.isGranted;
+  // 只是测试
+  // const permObj = getPermissions();
+  // const isAuthorized = !isLoading && permObj.some((perm) => perm === 'manager' || perm === 'admin');
+
   const defaultValues: insertCustomerSchemaType = {
     id: customer?.id ?? 0,
     firstName: customer?.firstName ?? '',
@@ -33,6 +42,7 @@ export default function CustomerForm({ customer }: Props) {
     phone: customer?.phone ?? '',
     email: customer?.email ?? '',
     notes: customer?.notes ?? '',
+    active: customer?.active ?? true,
   };
   const form = useForm<insertCustomerSchemaType>({
     mode: 'onBlur',
@@ -47,7 +57,9 @@ export default function CustomerForm({ customer }: Props) {
     <>
       <div className="flex flex-col gap-1 sm:px-8">
         <div>
-          <h2 className="text-2xl font-bold">{customer?.id ? 'Edit Customer Form' : 'New Customer Form'}</h2>
+          <h2 className="text-2xl font-bold">
+            {customer?.id ? 'Edit Customer Form' : 'New Customer Form'} {customer?.id ? ` --客户ID${customer.id}` : ''}
+          </h2>
         </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(submitForm)} className="flex flex-col xl:flex-row gap-4 xl:gap-8">
@@ -77,6 +89,16 @@ export default function CustomerForm({ customer }: Props) {
                 className="h-40"
               ></TextareaWithLabel>
 
+              {/* 如是【经理】就显示 复选框 */}
+              {isLoading ? (
+                <p>Loading......</p>
+              ) : isMansger && customer?.id ? (
+                <CheckboxwithLabel<insertCustomerSchemaType>
+                  fieldTitle="Active"
+                  nameInSchema="active"
+                  message="Yes"
+                ></CheckboxwithLabel>
+              ) : null}
               <div className="flex gap-2">
                 <Button type="submit" className="w-3/4" variant={'default'} title={'Save'}>
                   Save

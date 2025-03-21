@@ -11,8 +11,9 @@ type Props<S> = {
   fieldTitle: string;
   nameInSchema: keyof S & string;
   message: string;
+  disabled?: boolean;
 };
-export function CheckboxwithLabel<S>({ fieldTitle, nameInSchema, message }: Props<S>) {
+export function CheckboxwithLabel<S>({ fieldTitle, nameInSchema, message ,disabled=false}: Props<S>) {
   const form = useFormContext();
   return (
     <FormField
@@ -27,7 +28,7 @@ export function CheckboxwithLabel<S>({ fieldTitle, nameInSchema, message }: Prop
 
             <div className="flex items-center gap-2">
               <FormControl>
-                <Checkbox id={nameInSchema} {...field} onCheckedChange={field.onChange} checked={field.value} />
+                <Checkbox id={nameInSchema} {...field} onCheckedChange={field.onChange} checked={field.value} disabled={disabled} />
               </FormControl>
               {message}
             </div>

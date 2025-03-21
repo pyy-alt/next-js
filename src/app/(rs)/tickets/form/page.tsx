@@ -3,7 +3,51 @@ import { getCustomer } from '@/lib/queries/getCustomer';
 import { getTicket } from '@/lib/queries/getTickets';
 import * as Sentry from '@sentry/nextjs';
 import TicketForm from '@/app/(rs)/tickets/form/TicketForm';
-export default async function TicketFormPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | undefined }> }) {
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { Users, init as kindeInit, user } from '@kinde/management-api-js';
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | undefined }>;
+}) {
+  const { customerId,ticketId } = await searchParams;
+  if(!customerId && !ticketId){
+    return {
+      title: 'Missing Customer ID or Ticket ID',
+      description: '请检查客户ID或工单ID',
+    };
+  }
+  if(!customerId){
+    return {
+      title: 'Missing Customer ID',
+      description: '请检查客户ID',
+    };
+  }
+  if(!ticketId){
+    return {
+      title: 'Missing Ticket ID',
+      description: '请检查工单ID',
+    };
+  }
+  if(customerId){
+    return {
+      title: `创建新的工单 - 客户ID#${customerId}`,
+      description: '创建新的工单',
+    };
+  }
+  if(ticketId){
+    return {
+      title: `编辑工单 - 工单ID#${ticketId}`,
+      description: '编辑数据',
+    };
+  }
+}
+export default async function TicketFormPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | undefined }>;
+}) {
   try {
     const { customerId, ticketId } = await searchParams;
 
@@ -15,6 +59,10 @@ export default async function TicketFormPage({ searchParams }: { searchParams: P
         </>
       );
     }
+
+    const { getPermission, getUser } = getKindeServerSession();
+    const [managerPermission, user] = await Promise.all([getPermission('manager'), getUser()]);
+    const isMagager = managerPermission?.isGranted;
 
     // New ticket form
     if (customerId) {
@@ -37,7 +85,14 @@ export default async function TicketFormPage({ searchParams }: { searchParams: P
           </>
         );
       }
-      return <TicketForm customer={customer}></TicketForm>;
+      if (isMagager) {
+        kindeInit(); // initializes the kinde management api
+        const { users } = await Users.getUsers();
+        const techs = users ? users.map((user) => ({ id: user.email!, description: user.email! })) : [];
+        return <TicketForm customer={customer} techs={techs} />;
+      } else {
+        return <TicketForm customer={customer} />;
+      }
     }
 
     // Edit ticket form
@@ -56,9 +111,18 @@ export default async function TicketFormPage({ searchParams }: { searchParams: P
       const customer = await getCustomer(ticket.customerId);
 
       // return ticket form
-      console.log('ticket: ', ticket);
-      console.log('customer: ', customer);
-      return <TicketForm customer={customer} ticket={ticket}></TicketForm>;
+      if (isMagager) {
+        kindeInit(); // initializes the kinde management api
+        const { users } = await Users.getUsers();
+        const techs = users ? users.map((user) => ({ id: user.email!, description: user.email! })) : [];
+        return <TicketForm customer={customer} techs={techs} ticket={ticket} />;
+      } else {
+        const isEditable = user.email?.toLocaleLowerCase() === ticket.tech.toLocaleLowerCase() ;
+        console.log('isEditable',isEditable);
+        console.log('user',user.email);
+        console.log('ticket',ticket.tech);
+        return <TicketForm customer={customer} ticket={ticket} isEditable={isEditable} />;
+      }
     }
   } catch (e) {
     if (e instanceof Error) {

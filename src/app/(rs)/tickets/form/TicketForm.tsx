@@ -18,8 +18,13 @@ import { Button } from '@/components/ui/button';
 type Props = {
   ticket?: selectTicketSchemaType;
   customer: selectCustomerSchemaType;
+  techs?: { id: string; description: string }[];
+  isEditable?: boolean;
 };
-export default function TicketForm({ ticket, customer }: Props) {
+export default function TicketForm({ ticket, customer, techs, isEditable = true }: Props) {
+  const isManager = Array.isArray(techs) && techs.length > 0;
+  console.log(isManager);
+  
   const defaultValues: insertTicketSchemaType = {
     id: ticket?.id ?? '(New)',
     customerId: (ticket?.customerId ?? customer.id) || 0,
@@ -41,20 +46,31 @@ export default function TicketForm({ ticket, customer }: Props) {
       <div className="flex flex-col gap-1 sm:px-8">
         <div>
           <h2 className="text-2xl font-bold">
-            {' '}
-            Ticket {ticket?.id ? `Edit Ticket # ${ticket.id}  Form` : 'Create Ticket Form'}
+          { ticket?.id && isEditable ? `Edit Ticket #${ticket?.id}` : ticket?.id ? `View Ticket #${ticket?.id}` :  'New Ticket' }
           </h2>
         </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(submitForm)} className="flex flex-col xl:flex-row gap-4 xl:gap-8">
             <div className="flex flex-col gap-4 w-full max-w-md">
-              <InputWithLabel<insertTicketSchemaType> fieldTitle="Title" nameInSchema="title" />
-              <InputWithLabel<insertTicketSchemaType> fieldTitle="Tech" nameInSchema="tech" disabled={true} />
-              <CheckboxwithLabel<insertTicketSchemaType>
-                fieldTitle="Completed"
-                nameInSchema="completed"
-                message="Yes"
-              />
+              <InputWithLabel<insertTicketSchemaType> fieldTitle="Title" nameInSchema="title" disabled={!isEditable} />
+              {isManager ? (
+                <SelectWithLabel<insertTicketSchemaType>
+                  fieldTitle="Tech"
+                  nameInSchema="tech"
+                  data={[{ id: 'new-ticket@example.com', description: 'new-ticket@example.com' }, ...techs]}
+                />
+              ) : (
+                <InputWithLabel<insertTicketSchemaType> fieldTitle="Tech" nameInSchema="tech" disabled={true} />
+              )}
+
+              {ticket?.id ? (
+                <CheckboxwithLabel<insertTicketSchemaType>
+                  fieldTitle="Completed"
+                  nameInSchema="completed"
+                  message="Yes"
+                  disabled={!isEditable}
+                />
+              ) : null}
               <div className="mt-4 space-y-2">
                 <h3 className="text-lg">Customer Info</h3>
                 <hr className="w-4/5" />
@@ -76,22 +92,25 @@ export default function TicketForm({ ticket, customer }: Props) {
                 fieldTitle="Description"
                 nameInSchema="description"
                 className="h-96"
+                disabled={!isEditable}
               ></TextareaWithLabel>
 
-              <div className="flex gap-2">
-                <Button type="submit" className="w-3/4" variant={'default'} title={'Save'}>
-                  Save
-                </Button>
-                <Button
-                  type="submit"
-                  className="w-1/4"
-                  variant={'destructive'}
-                  title={'Reset'}
-                  onClick={() => form.reset(defaultValues)}
-                >
-                  Reset
-                </Button>
-              </div>
+              {isEditable ? (
+                <div className="flex gap-2">
+                  <Button type="submit" className="w-3/4" variant={'default'} title={'Save'}>
+                    Save
+                  </Button>
+                  <Button
+                    type="submit"
+                    className="w-1/4"
+                    variant={'destructive'}
+                    title={'Reset'}
+                    onClick={() => form.reset(defaultValues)}
+                  >
+                    Reset
+                  </Button>
+                </div>
+              ) : null}
             </div>
             {/* <p>{JSON.stringify(form.getValues())}</p> */}
           </form>

@@ -6,7 +6,29 @@ import BackButton from '@/components/BackButton';
 import { getCustomer } from '@/lib/queries/getCustomer';
 import * as Sentry from '@sentry/nextjs';
 import CustomerForm from '@/app/(rs)/customers/form/CustomerForm';
-export default async function CustomerFormPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string | undefined }> }) {
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string | undefined }>;
+}) {
+  const { customerId } = await searchParams;
+  if(!customerId){
+    return {
+      title: '客户管理',
+      description: '帮助客户管理一些数据',
+    };
+  }
+  return {
+    title: `客户管理 - ${customerId}`,
+    description: '帮助客户管理一些数据',
+  };
+}
+export default async function CustomerFormPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string | undefined }>;
+}) {
   try {
     const { customerId } = await searchParams;
     if (customerId) {
@@ -20,10 +42,10 @@ export default async function CustomerFormPage({ searchParams }: { searchParams:
         );
       }
       // edit customer form
-      return  <CustomerForm customer={customer}/>;
+      return <CustomerForm customer={customer} />;
     } else {
       // create customer form
-     return <CustomerForm/>;
+      return <CustomerForm />;
     }
   } catch (error) {
     if (error instanceof Error) {

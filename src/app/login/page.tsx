@@ -13,9 +13,9 @@ export default function LoginPage() {
       <Button asChild>
         <LoginLink>Login</LoginLink>
       </Button>
-      <Button asChild>
+      {/* <Button asChild>
         <RegisterLink>Register</RegisterLink>
-      </Button>
+      </Button> */}
     </main>
   );
 }
