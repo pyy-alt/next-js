@@ -21,8 +21,9 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'NextJs App',
-    template: '%s | NextJs App',
+    default: 'Next',
+    // 设置title的时候，会自动拼接title
+    template: '%s',
   },
   description: '我的第一个NextJs项目',
 };

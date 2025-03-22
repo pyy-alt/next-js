@@ -14,19 +14,19 @@ export async function generateMetadata({
   const { customerId,ticketId } = await searchParams;
   if(!customerId && !ticketId){
     return {
-      title: 'Missing Customer ID or Ticket ID',
+      title: '缺失工单ID或者客户ID',
       description: '请检查客户ID或工单ID',
     };
   }
   if(!customerId){
     return {
-      title: 'Missing Customer ID',
+      title: '缺失客户ID',
       description: '请检查客户ID',
     };
   }
   if(!ticketId){
     return {
-      title: 'Missing Ticket ID',
+      title: '缺失工单ID',
       description: '请检查工单ID',
     };
   }
