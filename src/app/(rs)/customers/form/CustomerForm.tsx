@@ -11,21 +11,30 @@ import {
 } from '@/zod-schemas/customer';
 import { Form } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import { LoaderCircle } from 'lucide-react';
 
 import { InputWithLabel } from '@/components/inputs/InputWithLabel';
 import { SelectWithLabel } from '@/components/inputs/SelectwithLabel';
 import { TextareaWithLabel } from '@/components/inputs/TextAreaWithLabel';
+import { CheckboxwithLabel } from '@/components/inputs/CheckboxwithLabel';
+import { DisplayServerActionResponse } from '@/components/DisplayServerActionResponse';
 
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 
 import { StatesArray as states } from '@/constants/StateArray';
-import { CheckboxwithLabel } from '@/components/inputs/CheckboxwithLabel';
+
+import { useAction } from 'next-safe-action/hooks';
+import { saveCustomerAction } from '@/app/actions/saveCustomerAction';
+
 type Props = {
   customer?: selectCustomerSchemaType;
 };
 export default function CustomerForm({ customer }: Props) {
   const { getPermissions, getPermission, isLoading } = useKindeBrowserClient();
   const isMansger = !isLoading && getPermission('manager')?.isGranted;
+  const { toast } = useToast();
+
   // 只是测试
   // const permObj = getPermissions();
   // const isAuthorized = !isLoading && permObj.some((perm) => perm === 'manager' || perm === 'admin');
@@ -49,13 +58,38 @@ export default function CustomerForm({ customer }: Props) {
     resolver: zodResolver(insertCustomerSchema),
     defaultValues,
   });
+
+  const {
+    execute: executeSave,
+    result: saveResult,
+    isExecuting: isSaveing,
+    reset: resetSaveAction,
+  } = useAction(saveCustomerAction, {
+    onSuccess: ({ data }) => {
+      toast({
+        title: 'Success 🎉',
+        description: data?.message,
+        variant: 'default',
+      });
+      // resetSaveAction();
+    },
+    onError: ({ error }) => {
+      toast({
+        title: 'Error ❌',
+        description: 'Save Error',
+        variant: 'destructive',
+      });
+    },
+  });
   async function submitForm(data: insertCustomerSchemaType) {
-    console.log(data);
+    // console.log(data);
+    executeSave({ ...data });
   }
 
   return (
     <>
       <div className="flex flex-col gap-1 sm:px-8">
+        <DisplayServerActionResponse result={saveResult} />
         <div>
           <h2 className="text-2xl font-bold">
             {customer?.id ? 'Edit Customer Form' : 'New Customer Form'} {customer?.id ? ` --客户ID${customer.id}` : ''}
@@ -100,15 +134,24 @@ export default function CustomerForm({ customer }: Props) {
                 ></CheckboxwithLabel>
               ) : null}
               <div className="flex gap-2">
-                <Button type="submit" className="w-3/4" variant={'default'} title={'Save'}>
-                  Save
+                <Button type="submit" className="w-3/4" variant={'default'} title={'Save'} disabled={isSaveing}>
+                  {isSaveing ? (
+                    <>
+                      <LoaderCircle className="h-4 w-4 animate-spin" /> Saveing
+                    </>
+                  ) : (
+                    'Save'
+                  )}
                 </Button>
                 <Button
                   type="submit"
                   className="w-1/4"
                   variant={'destructive'}
                   title={'Reset'}
-                  onClick={() => form.reset(defaultValues)}
+                  onClick={() => {
+                    form.reset(defaultValues);
+                    resetSaveAction();
+                  }}
                 >
                   Reset
                 </Button>

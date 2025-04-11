@@ -11,6 +11,7 @@ Sentry.init({
   integrations: [
     Sentry.replayIntegration(),
   ],
+  ignoreErrors:[ /^NEXT_REDIRECT$/ ],
 
   // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
   tracesSampleRate: 1,

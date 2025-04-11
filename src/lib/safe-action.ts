@@ -13,6 +13,7 @@ export const actionClient = createSafeActionClient({
     });
   },
   handleServerError(e, utils) {
+    // console.log(e.constructor.name ); // NeonDbError
     const { clientInput, metadata } = utils;
     Sentry.captureException(e, (scope) => {
       scope.clear();
@@ -21,7 +22,7 @@ export const actionClient = createSafeActionClient({
       scope.setContext('clientInput', { clientInput });
       return scope;
     });
-    if (e.constructor.name === 'DatabaseError') {
+    if (e.constructor.name === 'NeonDbError') {
       return 'Database Error : Your data did not save. Support will be notified.';
     }
     return e.message;

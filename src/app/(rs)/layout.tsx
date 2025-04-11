@@ -2,7 +2,6 @@
 // This software is released under the MIT License.
 
 import Header from '@/components/Header';
-
 // https://opensource.org/licenses/MIT
 export default async function RSLayout({
   children,

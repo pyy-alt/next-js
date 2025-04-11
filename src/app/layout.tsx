@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
+import { Toaster } from '@/components/ui/toaster';
 
 // 本地字体配置
 // import localFont from 'next/font/local'
@@ -8,7 +9,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 //   src: './fonts/SanJiPoMoTi-2.ttf',
 // })
 import { Geist, Geist_Mono } from 'next/font/google';
-import { SplashCursor } from '@/components/ui/splash-cursor';
+// import { SplashCursor } from '@/components/ui/splash-cursor';
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
@@ -39,7 +40,8 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           {children}
-          <SplashCursor />
+          <Toaster />
+          {/* <SplashCursor /> */}
         </ThemeProvider>
       </body>
     </html>
