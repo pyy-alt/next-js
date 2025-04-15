@@ -6,6 +6,7 @@ import { Metadata } from 'next';
 import TicketSearch from './TicketSearch';
 import { getTicketsSearchResult } from '@/lib/queries/getTicketsSearchResult';
 import { getOpenTickets } from '@/lib/queries/getOpenTickets';
+import TicketTable from './TicketTable';
 
 export const metadata: Metadata = {
   title: '工单搜索',
@@ -22,7 +23,8 @@ export default async function Tickets({
     return (
       <>
         <TicketSearch />
-        <p>{JSON.stringify(results)}</p>
+        {/* <p>{JSON.stringify(results)}</p> */}
+        {results.length ? <TicketTable data={results} /> : <p className="mt-4">没有找到数据</p>}
       </>
     );
   }
@@ -32,7 +34,9 @@ export default async function Tickets({
   return (
     <>
       <TicketSearch />
-      <p>{JSON.stringify(results)}</p>
+      {results.length ? <TicketTable data={results} /> : <p className="mt-4">没有找到数据</p>}
+
+      {/* <p>{JSON.stringify(results)}</p> */}
     </>
   );
 }
