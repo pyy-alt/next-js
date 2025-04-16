@@ -3,7 +3,7 @@
 1. [ ] Replace current sticky note system
 2. [x] Add a public facing page with basic contact info
 3. [x] Add a passwordless employee login to the app
-4. [ ] Show a real-time open tickets page after login
+4. [x] Show a real-time open tickets page after login
 5. [x] Provide easy navigation & search for customers & tickets
 6. [x] Provide a logout option
 7. [x] Require users to login at least once per week
@@ -32,7 +32,7 @@
 1. [ ] 替换当前的便签系统  
 2. [x] 添加一个面向公众的页面，包含基本联系信息  
 3. [x] 为应用添加无需密码的员工登录功能  
-4. [ ] 登录后显示实时开放票据页面  
+4. [x] 登录后显示实时开放票据页面  
 5. [x] 提供客户和票据的简便导航和搜索功能  
 6. [x] 提供登出选项  
 7. [x] 要求用户至少每周登录一次  
