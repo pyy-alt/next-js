@@ -15,6 +15,7 @@ const TicketSearch = () => {
         type="text"
         placeholder="请输入工单号"
         className="w-full"
+        autoFocus
       />
       <SearchButton />
     </Form>

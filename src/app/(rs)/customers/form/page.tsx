@@ -45,11 +45,15 @@ export default async function CustomerFormPage({
           </>
         );
       }
+
+
+
+      // 添加key修复 点击浏览器返回客户详情数据不显示问题
       // edit customer form
-      return <CustomerForm customer={customer} isManager={isManager} />;
+      return <CustomerForm key="customerId" customer={customer} isManager={isManager} />;
     } else {
       // create customer form
-      return <CustomerForm  isManager={isManager} />;
+      return <CustomerForm  key="new" isManager={isManager} />;
     }
   } catch (error) {
     if (error instanceof Error) {

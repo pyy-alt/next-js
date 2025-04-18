@@ -21,7 +21,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { CircleCheckIcon, CircleXIcon, ArrowUpDown, ArrowDown, ArrowUp } from 'lucide-react';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import Filter from '@/components/react-table/Filter';
 import { usePolling } from '@/hooks/usePolling';
@@ -148,6 +148,19 @@ export default function TicketTable({ data }: Props) {
     getSortedRowModel: getSortedRowModel(),
   });
 
+  // 修复分页bug
+  useEffect(() => {
+    const currentPageIndex = table.getState().pagination.pageIndex // 当前页码
+    const pageCount = table.getPageCount() // 获取总页数，一共几页
+
+    if (pageCount <= currentPageIndex && currentPageIndex > 0) {
+        const params = new URLSearchParams(searchParams.toString())
+        params.set('page', '1')
+        router.replace(`?${params.toString()}`, { scroll: false })
+    }
+}, [table.getState().columnFilters]) 
+
+
   return (
     <div className="mt-6 flex flex-col gap-4">
       <div className="rounded-lg overflow-hidden border border-border">
@@ -190,7 +203,7 @@ export default function TicketTable({ data }: Props) {
       <div className="flex justify-between items-center gap-1 flex-wrap">
         <div>
           <p className="whitespace-nowrap font-bold">
-            {`Page ${table.getState().pagination.pageIndex + 1} of ${table.getPageCount()}`}
+            {`Page ${table.getState().pagination.pageIndex + 1} of ${Math.max(1,table.getPageCount())}`}
             &nbsp;&nbsp;
             {`[ 总数 ${table.getFilteredRowModel().rows.length}]`
             }

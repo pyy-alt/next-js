@@ -9,7 +9,7 @@ import SearchButton from '@/components/SearchButton';
 const CustomerSearch = () => {
   return (
     <Form action="/customers" className="flex gap-2 items-center">
-      <Input name="searchText" type="text" placeholder="Search Customer" className="w-full" />
+      <Input name="searchText" type="text" placeholder="Search Customer" className="w-full" autoFocus />
       <SearchButton />
     </Form>
   );
