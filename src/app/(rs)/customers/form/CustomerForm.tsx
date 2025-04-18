@@ -20,26 +20,43 @@ import { TextareaWithLabel } from '@/components/inputs/TextAreaWithLabel';
 import { CheckboxwithLabel } from '@/components/inputs/CheckboxwithLabel';
 import { DisplayServerActionResponse } from '@/components/DisplayServerActionResponse';
 
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
-
 import { StatesArray as states } from '@/constants/StateArray';
 
 import { useAction } from 'next-safe-action/hooks';
 import { saveCustomerAction } from '@/app/actions/saveCustomerAction';
+import { useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 
 type Props = {
   customer?: selectCustomerSchemaType;
+  isManager?: boolean | undefined;
 };
-export default function CustomerForm({ customer }: Props) {
-  const { getPermissions, getPermission, isLoading } = useKindeBrowserClient();
-  const isMansger = !isLoading && getPermission('manager')?.isGranted;
+export default function CustomerForm({ customer, isManager = false }: Props) {
   const { toast } = useToast();
+
+  const searchParams = useSearchParams()
+  const hasCustomerId = searchParams.has("customerId")
+
+  const emptyValues: insertCustomerSchemaType = {
+    id: 0,
+    firstName: '',
+    lastName: '',
+    address1: '',
+    address2: '',
+    city: '',
+    state: '',
+    zip: '',
+    phone: '',
+    email: '',
+    notes: '',
+    active: true,
+}
 
   // 只是测试
   // const permObj = getPermissions();
   // const isAuthorized = !isLoading && permObj.some((perm) => perm === 'manager' || perm === 'admin');
 
-  const defaultValues: insertCustomerSchemaType = {
+  const defaultValues: insertCustomerSchemaType = hasCustomerId ? {
     id: customer?.id ?? 0,
     firstName: customer?.firstName ?? '',
     lastName: customer?.lastName ?? '',
@@ -52,12 +69,18 @@ export default function CustomerForm({ customer }: Props) {
     email: customer?.email ?? '',
     notes: customer?.notes ?? '',
     active: customer?.active ?? true,
-  };
+  } : emptyValues ;
   const form = useForm<insertCustomerSchemaType>({
     mode: 'onBlur',
     resolver: zodResolver(insertCustomerSchema),
     defaultValues,
   });
+
+  useEffect(() => {
+    form.reset(hasCustomerId ? defaultValues : emptyValues)
+// eslint-disable-next-line react-hooks/exhaustive-deps
+}, [searchParams.get("customerId")])
+
 
   const {
     execute: executeSave,
@@ -76,7 +99,7 @@ export default function CustomerForm({ customer }: Props) {
     onError: ({ error }) => {
       toast({
         title: 'Error ❌',
-        description: 'Save Error',
+        description: `${error instanceof Error ? error.message : error}`,
         variant: 'destructive',
       });
     },
@@ -124,9 +147,7 @@ export default function CustomerForm({ customer }: Props) {
               ></TextareaWithLabel>
 
               {/* 如是【经理】就显示 复选框 */}
-              {isLoading ? (
-                <p>Loading......</p>
-              ) : isMansger && customer?.id ? (
+              {isManager && customer?.id ? (
                 <CheckboxwithLabel<insertCustomerSchemaType>
                   fieldTitle="Active"
                   nameInSchema="active"
