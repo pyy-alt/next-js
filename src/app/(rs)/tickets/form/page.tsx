@@ -4,7 +4,7 @@ import { getTicket } from '@/lib/queries/getTickets';
 import * as Sentry from '@sentry/nextjs';
 import TicketForm from '@/app/(rs)/tickets/form/TicketForm';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import { Users, init as kindeInit, user } from '@kinde/management-api-js';
+import { Users, init as kindeInit } from '@kinde/management-api-js';
 
 export async function generateMetadata({
   searchParams,
@@ -88,7 +88,7 @@ export default async function TicketFormPage({
       if (isMagager) {
         kindeInit(); // initializes the kinde management api
         const { users } = await Users.getUsers();
-        const techs = users ? users.map((user) => ({ id: user.email!, description: user.email! })) : [];
+        const techs = users ? users.map((user) => ({ id: user.email!.toLocaleLowerCase()!, description: user.email!.toLocaleLowerCase()! })) : [];
         return <TicketForm customer={customer} techs={techs} />;
       } else {
         return <TicketForm customer={customer} />;

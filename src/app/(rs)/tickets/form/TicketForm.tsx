@@ -44,7 +44,7 @@ export default function TicketForm({
         title: ticket?.title ?? '',
         description: ticket?.description ?? '',
         completed: ticket?.completed ?? false,
-        tech: ticket?.tech ?? 'new-ticket@example.com',
+        tech: ticket?.tech.toLocaleLowerCase() ?? 'new-ticket@example.com',
     }
 
     const form = useForm<insertTicketSchemaType>({
@@ -71,7 +71,7 @@ export default function TicketForm({
         onError({ error }) {
             toast({
                 variant: "destructive",
-                title: "Error",
+                title: `${error instanceof Error ? error.message : error}`,
                 description: "Save Failed",
             })
         }
