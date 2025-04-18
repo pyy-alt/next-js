@@ -4,7 +4,6 @@
 import { Button } from '@/components/ui/button';
 import {
   LoginLink,
-  RegisterLink,
 } from '@kinde-oss/kinde-auth-nextjs/components';
 export default function LoginPage() {
   return (
@@ -13,9 +12,6 @@ export default function LoginPage() {
       <Button asChild>
         <LoginLink>Login</LoginLink>
       </Button>
-      {/* <Button asChild>
-        <RegisterLink>Register</RegisterLink>
-      </Button> */}
     </main>
   );
 }

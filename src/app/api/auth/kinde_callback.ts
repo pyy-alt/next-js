@@ -1,9 +1,9 @@
 // Copyright (c) 2025 zdb
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest } from 'next';
 
-const kindeCallback = async (req: NextApiRequest, res: NextApiResponse) => {
+const kindeCallback = async (req: NextApiRequest) => {
   const code = req.query.code;
   const redirectUri = req.query.redirect_uri;
 

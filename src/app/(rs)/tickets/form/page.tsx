@@ -94,7 +94,7 @@ export default async function TicketFormPage({
               description: user.email!.toLocaleLowerCase()!,
             }))
           : [];
-        return <TicketForm customer={customer} techs={techs} isManager={isManager}  />;
+        return <TicketForm customer={customer} techs={techs} isManager={isManager} />;
       } else {
         return <TicketForm customer={customer} />;
       }
@@ -122,11 +122,9 @@ export default async function TicketFormPage({
         const techs = users ? users.map((user) => ({ id: user.email!, description: user.email! })) : [];
         return <TicketForm customer={customer} techs={techs} ticket={ticket} isManager={isManager} />;
       } else {
-        const isEditable = user.email?.toLocaleLowerCase() === ticket.tech.toLocaleLowerCase();
-        console.log('isEditable', isEditable);
-        console.log('user', user.email);
-        console.log('ticket', ticket.tech);
-        return <TicketForm customer={customer} ticket={ticket} isEditable={isEditable}  />;
+        // const isEditable =  user && user.email?.toLocaleLowerCase() === ticket.tech.toLocaleLowerCase();
+        const isEditable =  user && ticket.tech ? user.email?.toLocaleLowerCase() === ticket.tech.toLocaleLowerCase() : false;
+        return <TicketForm customer={customer} ticket={ticket} isEditable={isEditable} />;
       }
     }
   } catch (e) {

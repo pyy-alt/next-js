@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build-shell": "./build.sh",
+    "build-next": "next build",
     "start": "next start",
     "lint": "next lint",
     "db:generate": "drizzle-kit generate",
@@ -30,7 +32,7 @@
     "drizzle-orm": "^0.40.0",
     "drizzle-zod": "^0.7.0",
     "lucide-react": "^0.475.0",
-    "next": "15.1.7",
+    "next": "^15.3.1",
     "next-safe-action": "^7.10.4",
     "next-themes": "^0.4.4",
     "react": "^19.0.0",
@@ -53,5 +55,8 @@
     "tailwindcss": "^3.4.1",
     "tsx": "^4.19.3",
     "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=18.18.0"
   }
 }
